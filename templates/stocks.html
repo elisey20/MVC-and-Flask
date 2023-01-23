@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/static/CSS/search.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/CSS/style.css"/>
+    <title>Биржа</title>
+    {% import "macros.html" as macros %}
+</head>
+<body>
+<div class=menu>
+    <ul>
+        <li><a href={{ url_for("portfolio") }}>Портфель</a></li>
+        <li class=active><a href={{ url_for('stocks') }}>Акции</a></li>
+    </ul>
+</div>
+<div class="content">
+    <div class="result">
+        <form action="{{ url_for('index') }}" method="get">
+            <input type="button" onclick="window.location='{{ url_for('index') }}'" value="Не покупать акцию">
+        </form>
+        <div class="cards">
+            {{ macros.render_cards(card, len, true) }}
+        </div>
+    </div>
+</div>
+</body>
+</html>

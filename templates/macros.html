@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+{% macro render_table(table_name, relation, id, len) %}
+    <p>
+        <b>{{ table_name }} </b>
+    </p>
+    {% if relation.dropna().empty %}
+        <h2>Портфель пуст</h2>
+    {% else %}
+        {% set n = len(relation) %}
+        <table border="1">
+            <tr style="background-color: rgb(242, 242, 242);">
+                {% for name in relation.dtypes.index %}
+                    {% if name != id %}
+                        <th>{{ name }}</th>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+            <tbody>
+
+            {% for i in range(n) %}
+                <tr>
+                    {% for name in relation.dtypes.index %}
+                        {% if name != id %}
+                            <td>
+                                {% if relation.loc[i, name] == None %}
+    {#                                <form action='' method="get">#}
+    {#                                    <input type="hidden" name=return#}
+    {#                                           value={{ relation.loc[i, "stock_client_id"]}}>#}
+    {#                                    <input type="submit" value="Сдать">#}
+    {#                                </form>#}
+                                {% else %}
+                                    {{ relation.loc[i, name] }}
+                                {% endif %}
+                            </td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endmacro %}
+
+{% macro render_readers(combo_box, account_id, len) %}
+    <select name="account" required>
+        {% set n = len(combo_box) %}
+        <!-- формируем строки списка (каждое значение поля
+        reader_name - строка списка) в виде
+        <option [selected] value = код_трейдера> ФИО </option>
+        -->
+        {% for i in range(n) %}
+            {% set id_r = combo_box.loc[i, "account_id"] %}
+            <!-- атрибут value элемента будет совпадать с id трейдера -->
+            {% if id_r == account_id %}
+                <!-- если код трейдера из таблицы совпадает с кодом
+                текущего трейдера устанавливаем атрибут selected -->
+                <option selected value={{ id_r }}>
+                    {% else %}
+                <option value={{ id_r }}>
+            {% endif %}
+        {{ combo_box.loc[i, "name"] }}
+        </option>
+        {% endfor %}
+    </select>
+{% endmacro %}
+
+{% macro render_cards(card, len, side) %}
+    {% set n = len(card) %}
+    {% for i in range(n) %}
+        {% if side %}
+            <div class="card">
+                {% for name in card.dtypes.index %}
+                    {% if name != 'ID' %}
+                        <p>{{ name }}: <b>{{ card.loc[i, name] }}</b></p>
+                    {% endif %}
+                {% endfor %}
+                <div class="button-wrapper">
+                    <form action="{{ url_for('portfolio') }}" method="get">
+                            <input type="submit" value="Купить"
+        {#                            {% if card.loc[i, 'Количество'] == 0 %}#}
+        {#                           disabled#}
+        {#                            {% endif %}#}
+                            >
+                            <label>
+                                <input hidden type="text" name="buy_stock" value="{{ card.loc[i, 'ID'] }}">
+                            </label>
+                    </form>
+                </div>
+            </div>
+        {% elif card.loc[i, 'Количество'] > 0 %}
+            <div class="card">
+                {% for name in card.dtypes.index %}
+                    {% if name != 'ID' %}
+                        <p>{{ name }}: <b>{{ card.loc[i, name] }}</b></p>
+                    {% endif %}
+                {% endfor %}
+                <div class="button-wrapper">
+                    <form action="{{ url_for('portfolio') }}" method="get">
+                            <input type="submit" value="Продать"
+    {#                            {% if card.loc[i, 'Количество'] == 0 %}#}
+    {#                           disabled#}
+    {#                            {% endif %}#}
+                            >
+                            <label>
+                                <input hidden type="text" name="sell_stock" value="{{ card.loc[i, 'ID'] }}">
+                            </label>
+                    </form>
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
+
+{% macro render_selected(relation, sel, name, len) %}
+    {% if len(sel) != 0 %}
+        <p>&nbsp;{{ name }}:
+            {% set n = len(relation) %}
+            {% for i in range(n) %}
+                {% set id_r = relation.loc[i, relation.columns[0]] %}
+                {% if id_r in sel %}
+                    {% if id_r == sel[-1] %}
+                        {{ relation.loc[i, relation.columns[1]] }}.
+                    {% else %}
+                        {{ relation.loc[i, relation.columns[1]] }},
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </p>
+    {% endif %}
+{% endmacro %}

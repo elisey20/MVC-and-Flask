@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="/static/CSS/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/CSS/table.css"/>
+    <title>Акции</title>
+    {% import "macros.html" as macros %}
+</head>
+<body>
+<div class=menu>
+    <ul>
+        <li class=active><a href={{ url_for("portfolio") }}>Портфель</a></li>
+        <li><a href={{ url_for('stocks') }}>Акции</a></li>
+    </ul>
+</div>
+<div class=block>
+    <p>
+    <form action='/portfolio' method="get">
+        Трейдер:
+        {{ macros.render_readers(combo_box, account_id, len) }}
+        <input type="submit" value="Найти">
+    </form>
+    </p>
+    </p>
+    <!-- Пока страница не создана, не указывать ее в action -->
+    <form action="{{ url_for('new_trader') }}" method="get">
+        <input type="submit" value="Новый трейдер">
+    </form>
+    </p>
+    Стоимость портфеля: {{ portfolio_cost }}
+    {{ macros.render_table("Портфель", stock_client, "stock_client_id", len) }}
+    </p>
+    <!-- Пока страница не создана, не указывать ее в action -->
+    <form action={{ url_for('buy') }} method="get">
+        <input type="submit" value="Купить акцию">
+    </form>
+    <form action={{ url_for('sell') }} method="get">
+        <input type="submit" value="Продать акцию">
+    </form>
+    </p>
+</div>
+
+</body>
+</html>

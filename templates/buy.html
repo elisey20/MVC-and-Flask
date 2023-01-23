@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Поиск</title>
+    <link rel="stylesheet" type="text/css" href="/static/CSS/search.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/CSS/style.css"/>
+    {% import "macros.html" as macros %}
+</head>
+<body>
+<div class=menu>
+    <ul>
+        <li class=active><a href="/">Поиск акций</a></li>
+    </ul>
+</div>
+<div class="content">
+    <div class="result">
+        <form action="{{ url_for('index') }}" method="get">
+            <input type="button" onclick="window.location='{{ url_for('index') }}'" value="Не покупать акцию">
+        </form>
+        <div class="cards">
+            {{ macros.render_cards(card, len, true) }}
+        </div>
+    </div>
+</div>
+</body>
+</html>

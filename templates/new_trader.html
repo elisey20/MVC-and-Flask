@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/static/CSS/style.css"/>
+    <title>Новый трейдер</title>
+    {% import "macros.html" as macros %}
+</head>
+<body>
+<div class=menu>
+    <ul>
+        <li class=active><a href="/">Новый трейдер</a></li>
+    </ul>
+</div>
+<div class=block>
+    <form action="{{ url_for('portfolio') }}" method="get">
+        <p>
+            <label>
+                Имя трейдера:
+                <input type="text" name="new_trader" required>
+            </label>
+        </p>
+        <p>
+            <input type="submit" value="Добавить трейдера">
+            <input type="button" onclick="window.location='{{ url_for('index') }}'" value="Отменить">
+        </p>
+    </form>
+</div>
+</body>
+</html>
